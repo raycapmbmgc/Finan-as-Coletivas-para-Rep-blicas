@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo | Rateio+</title>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>Rateio+</h2>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/despesas">Despesas</a></li>
+                <li><a href="/saldos">Quem Deve Para Quem</a></li>
+                <li><a href="/grupos">Membros</a></li>
+                <li><a href="/metas">Fundo de Reserva</a></li>
+                <li><a href="#">Configurações</a></li>
+            </ul>
+        </nav>
+
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="content">
+
+        <header class="header">
+            <h1>Grupo</h1>
+            <p>Gerencie os participantes e informações do grupo.</p>
+        </header>
+
+        <!-- INFORMAÇÕES -->
+        <section class="informacoes-grupo">
+
+            <h2>Informações do Grupo</h2>
+
+            <div class="card-info">
+                <p><strong>Nome do Grupo:</strong> República das Meninas</p>
+                <p><strong>Descrição:</strong> Controle financeiro compartilhado entre as integrantes.</p>
+            </div>
+
+        </section>
+
+        <!-- PARTICIPANTES -->
+        <section class="participantes">
+
+            <h2>Participantes</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Função</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Andrielle</td>
+                        <td>Administrador</td>
+                    </tr>
+
+                    <tr>
+                        <td>Rayca</td>
+                        <td>Membro</td>
+                    </tr>
+
+                    <tr>
+                        <td>Natalie</td>
+                        <td>Membro</td>
+                    </tr>
+
+                    <tr>
+                        <td>Tayna</td>
+                        <td>Membro</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <!-- AÇÕES -->
+        <section class="acoes-grupo">
+
+            <h2>Ações</h2>
+
+            <div class="botoes">
+
+                <button type="button">
+                    Adicionar Participante
+                </button>
+
+                <button type="button">
+                    Remover Participante
+                </button>
+
+                <button type="button">
+                    Editar Grupo
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- NOVO PARTICIPANTE -->
+        <section class="novo-participante">
+
+            <h2>Novo Participante</h2>
+
+            <form>
+
+                <div class="campo">
+                    <label for="nome">Nome</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Nome do participante"
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="funcao">Função</label>
+
+                    <select id="funcao" name="funcao">
+                        <option>Membro</option>
+                        <option>Administrador</option>
+                    </select>
+                </div>
+
+                <button type="submit">
+                    Adicionar
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
