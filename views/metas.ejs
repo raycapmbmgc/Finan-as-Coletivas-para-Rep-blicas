@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metas e Fundo de Reserva | Rateio+</title>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>Rateio+</h2>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/despesas">Despesas</a></li>
+                <li><a href="/saldos">Quem Deve Para Quem</a></li>
+                <li><a href="/grupos">Membros</a></li>
+                <li><a href="/metas">Fundo de Reserva</a></li>
+                <li><a href="#">Configurações</a></li>
+            </ul>
+        </nav>
+
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="content">
+
+        <header class="header">
+            <h1>Fundo de Reserva e Metas</h1>
+            <p>Acompanhe as economias do grupo.</p>
+        </header>
+
+        <!-- FUNDO DE RESERVA -->
+        <section class="fundo-reserva">
+
+            <h2>Fundo de Reserva</h2>
+
+            <div class="card-saldo">
+                <h3>Saldo Atual</h3>
+                <p>R$ 800,00</p>
+            </div>
+
+            <div class="acoes-fundo">
+
+                <button type="button">
+                    Adicionar Valor
+                </button>
+
+                <button type="button">
+                    Registrar Retirada
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- MOVIMENTAÇÕES -->
+        <section class="movimentacoes">
+
+            <h2>Movimentações</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Valor</th>
+                        <th>Responsável</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Entrada</td>
+                        <td>R$ 200,00</td>
+                        <td>Andrielle</td>
+                    </tr>
+
+                    <tr>
+                        <td>Entrada</td>
+                        <td>R$ 150,00</td>
+                        <td>Rayca</td>
+                    </tr>
+
+                    <tr>
+                        <td>Saída</td>
+                        <td>R$ 50,00</td>
+                        <td>Natalie</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <!-- META -->
+        <section class="meta-economia">
+
+            <h2>Meta de Economia</h2>
+
+            <div class="card-meta">
+
+                <p><strong>Meta:</strong> Viagem de fim de ano</p>
+
+                <p><strong>Objetivo:</strong> R$ 2.000,00</p>
+
+                <p><strong>Atual:</strong> R$ 1.250,00</p>
+
+                <p><strong>Progresso:</strong> 62%</p>
+
+            </div>
+
+        </section>
+
+        <!-- FORMULÁRIO -->
+        <section class="form-meta">
+
+            <h2>Cadastrar Nova Meta</h2>
+
+            <form>
+
+                <div class="campo">
+                    <label for="nomeMeta">Nome da Meta</label>
+
+                    <input
+                        type="text"
+                        id="nomeMeta"
+                        name="nomeMeta"
+                        placeholder="Ex: Viagem de fim de ano"
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="valorMeta">Valor Objetivo</label>
+
+                    <input
+                        type="number"
+                        id="valorMeta"
+                        name="valorMeta"
+                        placeholder="2000"
+                    >
+                </div>
+
+                <button type="submit">
+                    Salvar Meta
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
