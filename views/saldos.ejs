@@ -4,33 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quem Deve Para Quem | Rateio+</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="/css/style.css"/>
 </head>
 <body>
 
 <div class="container">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
-
         <div class="logo">
             <h2>Rateio+</h2>
         </div>
 
         <nav>
             <ul>
-                <li><a href="/dashboard">Dashboard</a></li>
-                <li><a href="/despesas">Despesas</a></li>
-                <li><a href="/saldos">Quem Deve Para Quem</a></li>
+                <li><a href="/dashboard/<%= grupoId %>">Dashboard</a></li>
+                <li><a href="/despesas/<%= grupoId %>">Despesas</a></li>
+                <li><a href="/saldos/<%= grupoId %>">Quem Deve Para Quem</a></li>
                 <li><a href="/grupos">Membros</a></li>
-                <li><a href="/metas">Fundo de Reserva</a></li>
-                <li><a href="#">Configurações</a></li>
+                <li><a href="/metas/<%= grupoId %>">Fundo de Reserva</a></li>
             </ul>
         </nav>
-
     </aside>
 
-    <!-- CONTEÚDO -->
     <main class="content">
 
         <header class="header">
@@ -38,7 +33,7 @@
             <p>Visualize os saldos entre os participantes.</p>
         </header>
 
-        <!-- RESUMO DE SALDOS -->
+        <!-- RESUMO REAL -->
         <section class="saldo-geral">
 
             <h2>Resumo dos Saldos</h2>
@@ -48,41 +43,51 @@
                 <thead>
                     <tr>
                         <th>Pessoa</th>
-                        <th>Pagou</th>
-                        <th>Deveria Pagar</th>
+                        <th>Entradas</th>
+                        <th>Saídas</th>
                         <th>Saldo</th>
                     </tr>
                 </thead>
 
                 <tbody>
 
-                    <tr>
-                        <td>Andrielle</td>
-                        <td>R$ 300,00</td>
-                        <td>R$ 150,00</td>
-                        <td>+ R$ 150,00</td>
-                    </tr>
+                    <% pessoas.forEach(p => { %>
+                        <tr>
+                            <td><%= p %></td>
 
-                    <tr>
-                        <td>Rayca</td>
-                        <td>R$ 100,00</td>
-                        <td>R$ 150,00</td>
-                        <td>- R$ 50,00</td>
-                    </tr>
+                            <td>
+                                R$ <%= movimentacoes
+                                    .filter(m => m.responsavel === p && m.tipo === 'entrada')
+                                    .reduce((a,b)=>a+Number(b.valor),0) %>
+                            </td>
 
-                    <tr>
-                        <td>Natalie</td>
-                        <td>R$ 50,00</td>
-                        <td>R$ 150,00</td>
-                        <td>- R$ 100,00</td>
-                    </tr>
+                            <td>
+                                R$ <%= movimentacoes
+                                    .filter(m => m.responsavel === p && m.tipo === 'saida')
+                                    .reduce((a,b)=>a+Number(b.valor),0) %>
+                            </td>
 
-                    <tr>
-                        <td>Tayna</td>
-                        <td>R$ 150,00</td>
-                        <td>R$ 150,00</td>
-                        <td>R$ 0,00</td>
-                    </tr>
+                            <td>
+                                <%
+                                    const entrada = movimentacoes
+                                        .filter(m => m.responsavel === p && m.tipo === 'entrada')
+                                        .reduce((a,b)=>a+Number(b.valor),0);
+
+                                    const saida = movimentacoes
+                                        .filter(m => m.responsavel === p && m.tipo === 'saida')
+                                        .reduce((a,b)=>a+Number(b.valor),0);
+
+                                    const saldo = entrada - saida;
+                                %>
+
+                                <% if (saldo >= 0) { %>
+                                    + R$ <%= saldo %>
+                                <% } else { %>
+                                    - R$ <%= Math.abs(saldo) %>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
 
                 </tbody>
 
@@ -90,18 +95,20 @@
 
         </section>
 
-        <!-- ACERTOS -->
+        <!-- ACERTOS SIMPLES -->
         <section class="acertos">
 
             <h2>Quem Deve Para Quem</h2>
 
-            <div class="card-acerto">
-                <p><strong>Rayca</strong> deve <strong>R$ 50,00</strong> para <strong>Andrielle</strong></p>
-            </div>
-
-            <div class="card-acerto">
-                <p><strong>Natalie</strong> deve <strong>R$ 100,00</strong> para <strong>Andrielle</strong></p>
-            </div>
+            <% if (saldo < 0) { %>
+                <div class="card-acerto">
+                    <p><strong>Existe saldo negativo no grupo</strong></p>
+                </div>
+            <% } else { %>
+                <div class="card-acerto">
+                    <p><strong>Grupo equilibrado</strong></p>
+                </div>
+            <% } %>
 
         </section>
 
@@ -110,40 +117,23 @@
 
             <h2>Registrar Pagamento</h2>
 
-            <form>
+            <form action="/saldos/<%= grupoId %>" method="POST">
 
                 <div class="campo">
-                    <label for="quemPagou">Quem Pagou</label>
-
-                    <select id="quemPagou" name="quemPagou">
-                        <option>Rayca</option>
-                        <option>Natalie</option>
-                        <option>Tayna</option>
+                    <label>Quem Pagou</label>
+                    <select name="quemPagou">
+                        <% pessoas.forEach(p => { %>
+                            <option><%= p %></option>
+                        <% }) %>
                     </select>
                 </div>
 
                 <div class="campo">
-                    <label for="paraQuem">Para Quem Pagou</label>
-
-                    <select id="paraQuem" name="paraQuem">
-                        <option>Andrielle</option>
-                    </select>
+                    <label>Valor</label>
+                    <input type="number" name="valor" placeholder="0,00" required>
                 </div>
 
-                <div class="campo">
-                    <label for="valor">Valor</label>
-
-                    <input
-                        type="number"
-                        id="valor"
-                        name="valor"
-                        placeholder="0,00"
-                    >
-                </div>
-
-                <button type="submit">
-                    Confirmar Pagamento
-                </button>
+                <button type="submit">Confirmar Pagamento</button>
 
             </form>
 

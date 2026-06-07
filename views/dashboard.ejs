@@ -4,161 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Rateio+</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
+    <aside class="sidebar">
 
-            <div class="logo">
-                <h2>Rateio+</h2>
+        <div class="logo">
+            <h2>Rateio+</h2>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/despesas">Despesas</a></li>
+                <li><a href="/saldos">Quem Deve Para Quem</a></li>
+                <li><a href="/grupos">Grupos</a></li>
+                <li><a href="/metas">Metas</a></li>
+                <li><a href="/logout">Sair</a></li>
+            </ul>
+        </nav>
+
+    </aside>
+
+    <main class="content">
+
+        <header class="header">
+            <div>
+                <h1>Olá, <%= usuario ? usuario.nome : 'Usuário' %> 👋</h1>
+                <p>Bem-vinda ao Rateio+</p>
+            </div>
+        </header>
+
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total de Despesas</h3>
+                <p>R$ <%= Number(totalDespesas).toFixed(2) %></p>
             </div>
 
-            <nav>
-                <ul>
-                    <li><a href="/dashboard">Dashboard</a></li>
-                    <li><a href="/despesas">Despesas</a></li>
-                    <li><a href="/saldos">Quem Deve Para Quem</a></li>
-                    <li><a href="/grupos">Membros</a></li>
-                    <li><a href="/metas">Fundo de Reserva</a></li>
-                    <li><a href="#">Configurações</a></li>
-                </ul>
-            </nav>
+            <div class="card">
+                <h3>Grupos</h3>
+                <p><%= totalGrupos %></p>
+            </div>
 
-        </aside>
+            <div class="card">
+                <h3>Metas Ativas</h3>
+                <p><%= metas.length %></p>
+            </div>
 
-        <!-- CONTEÚDO -->
-        <main class="content">
+        </section>
 
-            <!-- TOPO -->
-            <header class="header">
-                <div>
-                    <h1>Olá, Rayca 👋</h1>
-                    <p>Bem-vinda ao Rateio+.</p>
-                </div>
-            </header>
+        <section class="acoes-rapidas">
 
-            <!-- CARDS -->
-            <section class="cards">
+            <button onclick="location.href='/despesas'">
+                Nova Despesa
+            </button>
 
-                <div class="card">
-                    <h3>Total de Despesas</h3>
-                    <p>R$ 1.850,00</p>
-                </div>
+            <button onclick="location.href='/grupos'">
+                Ver Grupos
+            </button>
 
-                <div class="card">
-                    <h3>Seu Saldo</h3>
-                    <p>+ R$ 150,00</p>
-                </div>
+            <button onclick="location.href='/metas'">
+                Ver Metas
+            </button>
 
-                <div class="card">
-                    <h3>Membros</h3>
-                    <p>4</p>
-                </div>
+        </section>
 
-                <div class="card">
-                    <h3>Fundo de Reserva</h3>
-                    <p>R$ 800,00</p>
-                </div>
+        <section class="meta-economia">
 
-            </section>
+            <h2>Metas de Economia</h2>
 
-            <!-- BOTÕES -->
-            <section class="acoes-rapidas">
+            <% if (metas.length > 0) { %>
 
-                <button>Nova Despesa</button>
+                <% metas.forEach(meta => { %>
 
-                <button>Ver Saldos</button>
+                    <div class="card" style="margin-bottom:15px;">
 
-                <button>Adicionar ao Fundo</button>
+                        <h3><%= meta.nome %></h3>
 
-            </section>
+                        <p>
+                            Objetivo:
+                            <strong>
+                                R$ <%= Number(meta.valor_objetivo).toFixed(2) %>
+                            </strong>
+                        </p>
 
-            <!-- ÚLTIMAS DESPESAS -->
-            <section class="ultimas-despesas">
+                        <p>
+                            Atual:
+                            <strong>
+                                R$ <%= Number(meta.valor_atual).toFixed(2) %>
+                            </strong>
+                        </p>
 
-                <h2>Últimas Despesas</h2>
+                        <%
+                            let progresso = 0;
 
-                <table>
+                            if(meta.valor_objetivo > 0){
+                                progresso = (
+                                    meta.valor_atual /
+                                    meta.valor_objetivo
+                                ) * 100;
+                            }
+                        %>
 
-                    <thead>
-                        <tr>
-                            <th>Descrição</th>
-                            <th>Valor</th>
-                            <th>Pagador</th>
-                            <th>Data</th>
-                        </tr>
-                    </thead>
+                        <p>
+                            Progresso:
+                            <strong>
+                                <%= progresso.toFixed(0) %>%
+                            </strong>
+                        </p>
 
-                    <tbody>
+                    </div>
 
-                        <tr>
-                            <td>Mercado</td>
-                            <td>R$ 150,00</td>
-                            <td>Andrielle</td>
-                            <td>01/06/2026</td>
-                        </tr>
+                <% }) %>
 
-                        <tr>
-                            <td>Internet</td>
-                            <td>R$ 120,00</td>
-                            <td>Rayca</td>
-                            <td>03/06/2026</td>
-                        </tr>
+            <% } else { %>
 
-                        <tr>
-                            <td>Produtos de Limpeza</td>
-                            <td>R$ 85,00</td>
-                            <td>Natalie</td>
-                            <td>05/06/2026</td>
-                        </tr>
+                <p>Nenhuma meta cadastrada.</p>
 
-                        <tr>
-                            <td>Streaming</td>
-                            <td>R$ 45,00</td>
-                            <td>Tayna</td>
-                            <td>06/06/2026</td>
-                        </tr>
+            <% } %>
 
-                    </tbody>
+        </section>
 
-                </table>
+    </main>
 
-            </section>
-
-            <!-- META -->
-            <section class="meta-economia">
-
-                <h2>Meta de Economia</h2>
-
-                <p>
-                    Objetivo:
-                    <strong>Viagem de fim de ano</strong>
-                </p>
-
-                <p>
-                    Valor objetivo:
-                    <strong>R$ 2.000,00</strong>
-                </p>
-
-                <p>
-                    Valor atual:
-                    <strong>R$ 1.250,00</strong>
-                </p>
-
-                <p>
-                    Progresso:
-                    <strong>62%</strong>
-                </p>
-
-            </section>
-
-        </main>
-
-    </div>
+</div>
 
 </body>
 </html>

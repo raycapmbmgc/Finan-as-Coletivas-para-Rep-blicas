@@ -1,35 +1,51 @@
 const Meta = require('../models/Meta');
+const Financeiro = require('../models/Financeiro');
 
 exports.index = async (req, res) => {
 
-    const metas = await Meta.listar();
+    const grupoId = req.params.id || 1;
+
+    const saldo = await Financeiro.saldoGrupo(grupoId);
+    const movimentacoes = await Financeiro.listarMovimentacoes(grupoId);
+    const metas = await Meta.listar(grupoId);
+
+    const metasComProgresso = metas.map(m => {
+
+        const atual = Number(m.valor_atual || 0);
+        const objetivo = Number(m.valor_objetivo || 1);
+
+        const progresso = (atual / objetivo) * 100;
+
+        return {
+            ...m,
+            progresso: progresso.toFixed(0)
+        };
+    });
 
     res.render('metas', {
-        metas
+        saldo,
+        movimentacoes,
+        metas: metasComProgresso,
+        grupoId
     });
 };
 
-exports.nova = (req, res) => {
-    res.render('meta-form');
+exports.criarMeta = async (req, res) => {
+
+    const grupoId = req.params.id;
+    const { nomeMeta, valorMeta } = req.body;
+
+    await Meta.criar(nomeMeta, valorMeta, grupoId);
+
+    res.redirect('/metas/' + grupoId);
 };
 
-exports.criar = async (req, res) => {
+exports.excluirMeta = async (req, res) => {
 
-    const {
-        nome,
-        valor_objetivo
-    } = req.body;
+    const grupoId = req.params.id;
+    const metaId = req.params.metaId;
 
-    await Meta.criar(
-        nome,
-        valor_objetivo
-    );
+    await Meta.excluir(metaId);
 
-    res.redirect('/metas');
-};
-
-exports.excluir = async (req, res) => {
-
-    await Meta.excluir(req.params.id);
-    res.redirect('/metas');
+    res.redirect('/metas/' + grupoId);
 };

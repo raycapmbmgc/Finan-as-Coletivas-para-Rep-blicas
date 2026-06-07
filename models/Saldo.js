@@ -1,22 +1,28 @@
 class Saldo {
 
-    static calcular(despesas, quantidadePessoas) {
+    static calcularMovimentacoes(movimentacoes) {
 
-        let total = 0;
+        const totalEntrada = movimentacoes
+            .filter(m => m.tipo === 'entrada')
+            .reduce((acc, m) => acc + Number(m.valor), 0);
 
-        despesas.forEach(despesa => {
-            total += Number(despesa.valor);
-        });
+        const totalSaida = movimentacoes
+            .filter(m => m.tipo === 'saida')
+            .reduce((acc, m) => acc + Number(m.valor), 0);
 
-        const valorPorPessoa =
-            total / quantidadePessoas;
+        const saldo = totalEntrada - totalSaida;
+
+        const pessoas = [...new Set(movimentacoes.map(m => m.responsavel))];
+        const quantidadePessoas = pessoas.length || 1;
 
         return {
-            total,
-            valorPorPessoa
+            saldo,
+            totalEntrada,
+            totalSaida,
+            valorPorPessoa: saldo / quantidadePessoas,
+            pessoas
         };
     }
-
 }
 
 module.exports = Saldo;

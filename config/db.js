@@ -1,10 +1,26 @@
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 const db = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'financas_coletivas'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
+
+(async () => {
+    try {
+        const connection = await db.getConnection();
+        console.log('✅ Conectado com o banco de dados!');
+        connection.release();
+    } catch (error) {
+        console.log('❌ Erro ao conectar no banco:');
+        console.log(error.message);
+    }
+})();
 
 module.exports = db;

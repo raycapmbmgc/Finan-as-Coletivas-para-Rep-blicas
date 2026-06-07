@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grupo | Rateio+</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <title>Grupos | Rateio+</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -22,7 +22,7 @@
                 <li><a href="/dashboard">Dashboard</a></li>
                 <li><a href="/despesas">Despesas</a></li>
                 <li><a href="/saldos">Quem Deve Para Quem</a></li>
-                <li><a href="/grupos">Membros</a></li>
+                <li><a href="/grupos">Grupos</a></li>
                 <li><a href="/metas">Fundo de Reserva</a></li>
                 <li><a href="#">Configurações</a></li>
             </ul>
@@ -34,118 +34,159 @@
     <main class="content">
 
         <header class="header">
-            <h1>Grupo</h1>
-            <p>Gerencie os participantes e informações do grupo.</p>
+            <h1>Grupos</h1>
+            <p>Gerencie seus grupos e participantes.</p>
         </header>
 
-        <!-- INFORMAÇÕES -->
-        <section class="informacoes-grupo">
+        <!-- CRIAR GRUPO -->
+        <section class="novo-grupo">
 
-            <h2>Informações do Grupo</h2>
+            <h2>Criar Grupo</h2>
 
-            <div class="card-info">
-                <p><strong>Nome do Grupo:</strong> República das Meninas</p>
-                <p><strong>Descrição:</strong> Controle financeiro compartilhado entre as integrantes.</p>
-            </div>
+            <form action="/grupos" method="POST">
+
+                <div class="campo">
+
+                    <label for="nomeGrupo">
+                        Nome do Grupo
+                    </label>
+
+                    <input
+                        id="nomeGrupo"
+                        type="text"
+                        name="nome"
+                        placeholder="Ex: Apartamento 302"
+                        required
+                    >
+
+                </div>
+
+                <button type="submit">
+                    Criar Grupo
+                </button>
+
+            </form>
 
         </section>
 
-        <!-- PARTICIPANTES -->
-        <section class="participantes">
+        <hr>
 
-            <h2>Participantes</h2>
+        <!-- LISTA DE GRUPOS -->
+       <section class="lista-grupos">
 
-            <table>
+    <h2>Grupos Cadastrados</h2>
 
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Função</th>
-                    </tr>
-                </thead>
+    <% if (grupos && grupos.length > 0) { %>
 
-                <tbody>
+        <ul>
 
-                    <tr>
-                        <td>Andrielle</td>
-                        <td>Administrador</td>
-                    </tr>
+            <% grupos.forEach(g => { %>
 
-                    <tr>
-                        <td>Rayca</td>
-                        <td>Membro</td>
-                    </tr>
+                <li style="margin-bottom:15px;">
 
-                    <tr>
-                        <td>Natalie</td>
-                        <td>Membro</td>
-                    </tr>
+                    <a href="/grupos/<%= g.id %>">
+                        <strong><%= g.nome %></strong>
+                    </a>
 
-                    <tr>
-                        <td>Tayna</td>
-                        <td>Membro</td>
-                    </tr>
+                    <% if (
+                        typeof usuario !== 'undefined' &&
+                        usuario &&
+                        g.criador_id == usuario.id
+                    ) { %>
 
-                </tbody>
+                        <form
+                            action="/grupos/excluir/<%= g.id %>"
+                            method="POST"
+                            style="display:inline;"
+                        >
 
-            </table>
+                            <button type="submit">
+                                Excluir
+                            </button>
 
-        </section>
+                        </form>
 
-        <!-- AÇÕES -->
-        <section class="acoes-grupo">
+                    <% } %>
 
-            <h2>Ações</h2>
+                </li>
 
-            <div class="botoes">
+            <% }) %>
 
-                <button type="button">
-                    Adicionar Participante
-                </button>
+        </ul>
 
-                <button type="button">
-                    Remover Participante
-                </button>
+    <% } else { %>
 
-                <button type="button">
-                    Editar Grupo
-                </button>
+        <p>Nenhum grupo cadastrado.</p>
 
-            </div>
+    <% } %>
 
-        </section>
+</section>
+
+        <hr>
 
         <!-- NOVO PARTICIPANTE -->
         <section class="novo-participante">
 
             <h2>Novo Participante</h2>
 
-            <form>
+            <% if (grupo) { %>
 
-                <div class="campo">
-                    <label for="nome">Nome</label>
-                    <input
-                        type="text"
-                        id="nome"
-                        name="nome"
-                        placeholder="Nome do participante"
-                    >
-                </div>
+                <form
+                    action="/grupos/<%= grupo.id %>/participantes"
+                    method="POST"
+                >
 
-                <div class="campo">
-                    <label for="funcao">Função</label>
+                    <div class="campo">
 
-                    <select id="funcao" name="funcao">
-                        <option>Membro</option>
-                        <option>Administrador</option>
-                    </select>
-                </div>
+                        <label for="nomeParticipante">
+                            Nome
+                        </label>
 
-                <button type="submit">
-                    Adicionar
-                </button>
+                        <input
+                            id="nomeParticipante"
+                            type="text"
+                            name="nome"
+                            required
+                        >
 
-            </form>
+                    </div>
+
+                    <div class="campo">
+
+                        <label for="funcao">
+                            Função
+                        </label>
+
+                        <select
+                            id="funcao"
+                            name="funcao"
+                        >
+
+                            <option value="Membro">
+                                Membro
+                            </option>
+
+                            <option value="Administrador">
+                                Administrador
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <button type="submit">
+                        Adicionar Participante
+                    </button>
+
+                </form>
+
+            <% } else { %>
+
+                <p>
+                    Selecione um grupo para adicionar participantes.
+                </p>
+
+            <% } %>
 
         </section>
 

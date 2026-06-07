@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Despesas | Rateio+</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -22,9 +22,9 @@
                 <li><a href="/dashboard">Dashboard</a></li>
                 <li><a href="/despesas">Despesas</a></li>
                 <li><a href="/saldos">Quem Deve Para Quem</a></li>
-                <li><a href="/grupos">Membros</a></li>
-                <li><a href="/metas">Fundo de Reserva</a></li>
-                <li><a href="#">Configurações</a></li>
+                <li><a href="/grupos">Grupos</a></li>
+                <li><a href="/metas">Metas</a></li>
+                <li><a href="/logout">Sair</a></li>
             </ul>
         </nav>
 
@@ -38,72 +38,110 @@
             <p>Cadastre uma nova despesa compartilhada.</p>
         </header>
 
-        <!-- FORMULÁRIO -->
-        <section class="formulario-despesa">
+      <form action="/despesas" method="POST">
 
-            <form>
+    <div class="campo">
+        <label for="descricao">Descrição</label>
+        <input
+            type="text"
+            id="descricao"
+            name="descricao"
+            placeholder="Ex: Mercado"
+            required
+        >
+    </div>
 
-                <div class="campo">
-                    <label for="descricao">Descrição</label>
-                    <input
-                        type="text"
-                        id="descricao"
-                        name="descricao"
-                        placeholder="Ex: Mercado"
-                    >
-                </div>
+    <div class="campo">
+        <label for="valor">Valor</label>
+        <input
+            type="number"
+            step="0.01"
+            id="valor"
+            name="valor"
+            placeholder="0.00"
+            required
+        >
+    </div>
 
-                <div class="campo">
-                    <label for="valor">Valor</label>
-                    <input
-                        type="number"
-                        id="valor"
-                        name="valor"
-                        placeholder="0,00"
-                    >
-                </div>
+    <div class="campo">
+        <label for="categoria">Categoria</label>
 
-                <div class="campo">
-                    <label for="categoria">Categoria</label>
+        <select
+            id="categoria"
+            name="categoria"
+            required
+        >
+            <option value="Alimentação">Alimentação</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Lazer">Lazer</option>
+            <option value="Moradia">Moradia</option>
+            <option value="Outros">Outros</option>
+        </select>
+    </div>
 
-                    <select id="categoria" name="categoria">
-                        <option>Alimentação</option>
-                        <option>Transporte</option>
-                        <option>Lazer</option>
-                        <option>Moradia</option>
-                        <option>Outros</option>
-                    </select>
-                </div>
+    <div class="campo">
+        <label for="usuario_pagador">
+            Quem Pagou
+        </label>
 
-                <div class="campo">
-                    <label for="data">Data</label>
-                    <input
-                        type="date"
-                        id="data"
-                        name="data"
-                    >
-                </div>
+        <select
+            id="usuario_pagador"
+            name="usuario_pagador"
+            required
+        >
 
-                <div class="campo">
-                    <label for="pagador">Quem Pagou</label>
+            <% usuarios.forEach(usuario => { %>
 
-                    <select id="pagador" name="pagador">
-                        <option>Andrielle</option>
-                        <option>Rayca</option>
-                        <option>Natalie</option>
-                        <option>Tayna</option>
-                    </select>
-                </div>
+                <option value="<%= usuario.id %>">
+                    <%= usuario.nome %>
+                </option>
 
-                <button type="submit">
-                    Salvar Despesa
-                </button>
+            <% }) %>
 
-            </form>
+        </select>
+    </div>
 
-        </section>
+    <div class="campo">
+        <label for="grupo_id">
+            Grupo
+        </label>
 
-        <!-- LISTA -->
+        <select
+            id="grupo_id"
+            name="grupo_id"
+            required
+        >
+
+            <% grupos.forEach(grupo => { %>
+
+                <option value="<%= grupo.id %>">
+                    <%= grupo.nome %>
+                </option>
+
+            <% }) %>
+
+        </select>
+    </div>
+
+    <div class="campo">
+        <label for="data_despesa">
+            Data
+        </label>
+
+        <input
+            type="date"
+            id="data_despesa"
+            name="data_despesa"
+            required
+        >
+    </div>
+
+    <button type="submit">
+        Salvar Despesa
+    </button>
+
+</form>
+        <!-- TABELA -->
         <section class="lista-despesas">
 
             <h2>Despesas Cadastradas</h2>
@@ -117,42 +155,64 @@
                         <th>Categoria</th>
                         <th>Pagador</th>
                         <th>Data</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
 
                 <tbody>
 
-                    <tr>
-                        <td>Mercado</td>
-                        <td>R$ 150,00</td>
-                        <td>Alimentação</td>
-                        <td>Andrielle</td>
-                        <td>01/06/2026</td>
-                    </tr>
+                <% if (despesas && despesas.length > 0) { %>
+
+                    <% despesas.forEach(despesa => { %>
+
+                        <tr>
+
+                            <td>
+                                <%= despesa.descricao %>
+                            </td>
+
+                            <td>
+                                R$ <%= Number(despesa.valor).toFixed(2) %>
+                            </td>
+
+                            <td>
+                                <%= despesa.categoria %>
+                            </td>
+
+                            <td>
+                                <%= despesa.usuario_pagador %>
+                            </td>
+
+                            <td>
+                                <%= new Date(
+                                    despesa.data_despesa
+                                ).toLocaleDateString('pt-BR') %>
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="/despesas/excluir/<%= despesa.id %>"
+                                    onclick="return confirm('Deseja excluir esta despesa?')"
+                                >
+                                    Excluir
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    <% }) %>
+
+                <% } else { %>
 
                     <tr>
-                        <td>Internet</td>
-                        <td>R$ 120,00</td>
-                        <td>Moradia</td>
-                        <td>Rayca</td>
-                        <td>03/06/2026</td>
+                        <td colspan="6">
+                            Nenhuma despesa cadastrada.
+                        </td>
                     </tr>
 
-                    <tr>
-                        <td>Produtos de Limpeza</td>
-                        <td>R$ 85,00</td>
-                        <td>Moradia</td>
-                        <td>Natalie</td>
-                        <td>05/06/2026</td>
-                    </tr>
-
-                    <tr>
-                        <td>Netflix</td>
-                        <td>R$ 45,00</td>
-                        <td>Lazer</td>
-                        <td>Tayna</td>
-                        <td>06/06/2026</td>
-                    </tr>
+                <% } %>
 
                 </tbody>
 

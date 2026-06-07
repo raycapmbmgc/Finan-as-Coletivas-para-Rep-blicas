@@ -10,6 +10,7 @@ exports.index = async (req, res) => {
         const metas = await Meta.listar();
 
         res.render('dashboard', {
+            usuario: req.session.usuario,
             totalDespesas,
             totalGrupos,
             metas

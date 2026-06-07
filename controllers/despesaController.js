@@ -1,11 +1,17 @@
 const Despesa = require('../models/Despesa');
+const Grupo = require('../models/Grupo');
+const Usuario = require('../models/Usuario');
 
 exports.index = async (req, res) => {
 
     const despesas = await Despesa.listar();
+    const grupos = await Grupo.listar();
+    const usuarios = await Usuario.listar();
 
     res.render('despesas', {
-        despesas
+        despesas,
+        grupos,
+        usuarios
     });
 };
 
@@ -15,28 +21,50 @@ exports.nova = (req, res) => {
 
 exports.criar = async (req, res) => {
 
-    const {
-        descricao,
-        valor,
-        categoria,
-        usuario_pagador,
-        grupo_id
-    } = req.body;
+    try {
 
-    await Despesa.criar(
-        descricao,
-        valor,
-        categoria,
-        usuario_pagador,
-        grupo_id
-    );
+        console.log("=== NOVA DESPESA ===");
+        console.log(req.body);
 
-    res.redirect('/despesas');
+        const {
+            descricao,
+            valor,
+            categoria,
+            usuario_pagador,
+            grupo_id
+        } = req.body;
+
+        await Despesa.criar(
+            descricao,
+            valor,
+            categoria,
+            usuario_pagador,
+            grupo_id
+        );
+
+        res.redirect('/despesas');
+
+    } catch (error) {
+
+        console.error("ERRO AO SALVAR DESPESA:");
+        console.error(error);
+
+        res.status(500).send(error.message);
+    }
 };
 
 exports.excluir = async (req, res) => {
 
-    await Despesa.excluir(req.params.id);
+    try {
 
-    res.redirect('/despesas');
+        await Despesa.excluir(req.params.id);
+
+        res.redirect('/despesas');
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).send('Erro ao excluir despesa');
+    }
 };

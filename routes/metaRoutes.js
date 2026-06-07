@@ -2,13 +2,21 @@ const express = require('express');
 const router = express.Router();
 
 const metaController = require('../controllers/metaController');
+const financeiroController = require('../controllers/financeiroController');
 
-router.get('/', metaController.index);
+// 🔥 página principal
+router.get('/', (req, res) => {
+    res.redirect('/metas/1');
+});
 
-router.get('/nova', metaController.nova);
+router.get('/:id', metaController.index);
 
-router.post('/nova', metaController.criar);
+// 💰 financeiro
+router.post('/:id/entrada', financeiroController.entrada);
+router.post('/:id/saida', financeiroController.saida);
 
-router.get('/excluir/:id', metaController.excluir);
+// 🎯 metas
+router.post('/:id/meta', metaController.criarMeta);
+router.get('/:id/meta/excluir/:metaId', metaController.excluirMeta);
 
 module.exports = router;

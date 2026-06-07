@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metas e Fundo de Reserva | Rateio+</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
 </head>
+
 <body>
 
 <div class="container">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
 
         <div class="logo">
@@ -30,7 +30,6 @@
 
     </aside>
 
-    <!-- CONTEÚDO -->
     <main class="content">
 
         <header class="header">
@@ -38,31 +37,42 @@
             <p>Acompanhe as economias do grupo.</p>
         </header>
 
-        <!-- FUNDO DE RESERVA -->
         <section class="fundo-reserva">
 
             <h2>Fundo de Reserva</h2>
 
-            <div class="card-saldo">
-                <h3>Saldo Atual</h3>
-                <p>R$ 800,00</p>
-            </div>
+           <div class="card-saldo">
+    <h3>💰 Saldo Atual</h3>
+
+    <p style="
+        font-size: 32px;
+        font-weight: bold;
+        color: <%= saldo >= 0 ? '#2ecc71' : '#e74c3c' %>;
+    >
+        R$ <%= Number(saldo).toFixed(2) %>
+    </p>
+</div>
 
             <div class="acoes-fundo">
 
-                <button type="button">
-                    Adicionar Valor
-                </button>
+         
+                <form action="/metas/<%= grupoId %>/entrada" method="POST">
+                    <input type="number" name="valor" placeholder="Valor entrada" required>
+                    <input type="text" name="responsavel" placeholder="Responsável" required>
+                    <button type="submit">Adicionar Valor</button>
+                </form>
 
-                <button type="button">
-                    Registrar Retirada
-                </button>
+           
+                <form action="/metas/<%= grupoId %>/saida" method="POST">
+                    <input type="number" name="valor" placeholder="Valor saída" required>
+                    <input type="text" name="responsavel" placeholder="Responsável" required>
+                    <button type="submit">Registrar Retirada</button>
+                </form>
 
             </div>
 
         </section>
 
-        <!-- MOVIMENTAÇÕES -->
         <section class="movimentacoes">
 
             <h2>Movimentações</h2>
@@ -79,23 +89,13 @@
 
                 <tbody>
 
-                    <tr>
-                        <td>Entrada</td>
-                        <td>R$ 200,00</td>
-                        <td>Andrielle</td>
-                    </tr>
-
-                    <tr>
-                        <td>Entrada</td>
-                        <td>R$ 150,00</td>
-                        <td>Rayca</td>
-                    </tr>
-
-                    <tr>
-                        <td>Saída</td>
-                        <td>R$ 50,00</td>
-                        <td>Natalie</td>
-                    </tr>
+                    <% movimentacoes.forEach(m => { %>
+                        <tr>
+                            <td><%= m.tipo %></td>
+                            <td>R$ <%= m.valor %></td>
+                            <td><%= m.responsavel %></td>
+                        </tr>
+                    <% }) %>
 
                 </tbody>
 
@@ -103,57 +103,54 @@
 
         </section>
 
-        <!-- META -->
         <section class="meta-economia">
 
-            <h2>Meta de Economia</h2>
+            <h2>Metas de Economia</h2>
 
-            <div class="card-meta">
+            <% metas.forEach(m => { %>
 
-                <p><strong>Meta:</strong> Viagem de fim de ano</p>
+                <div class="card-meta">
 
-                <p><strong>Objetivo:</strong> R$ 2.000,00</p>
+                    <p><strong>Meta:</strong> <%= m.nome %></p>
 
-                <p><strong>Atual:</strong> R$ 1.250,00</p>
+                    <p><strong>Objetivo:</strong> R$ <%= m.valor_objetivo %></p>
 
-                <p><strong>Progresso:</strong> 62%</p>
+                    <p><strong>Atual:</strong> R$ <%= m.valor_atual %></p>
 
-            </div>
+                    <p><strong>Progresso:</strong> <%= m.progresso %>%</p>
+
+                    <div style="background:#eee; height:10px; border-radius:5px;">
+                        <div style="width:<%= m.progresso %>%; background:green; height:10px; border-radius:5px;"></div>
+                    </div>
+
+                
+                    <a href="/metas/<%= grupoId %>/meta/excluir/<%= m.id %>">
+                        <button type="button">Excluir</button>
+                    </a>
+
+                </div>
+
+            <% }) %>
 
         </section>
 
-        <!-- FORMULÁRIO -->
         <section class="form-meta">
 
             <h2>Cadastrar Nova Meta</h2>
 
-            <form>
+            <form action="/metas/<%= grupoId %>/meta" method="POST">
 
                 <div class="campo">
-                    <label for="nomeMeta">Nome da Meta</label>
-
-                    <input
-                        type="text"
-                        id="nomeMeta"
-                        name="nomeMeta"
-                        placeholder="Ex: Viagem de fim de ano"
-                    >
+                    <label>Nome da Meta</label>
+                    <input type="text" name="nomeMeta" placeholder="Ex: Viagem de fim de ano" required>
                 </div>
 
                 <div class="campo">
-                    <label for="valorMeta">Valor Objetivo</label>
-
-                    <input
-                        type="number"
-                        id="valorMeta"
-                        name="valorMeta"
-                        placeholder="2000"
-                    >
+                    <label>Valor Objetivo</label>
+                    <input type="number" name="valorMeta" placeholder="2000" required>
                 </div>
 
-                <button type="submit">
-                    Salvar Meta
-                </button>
+                <button type="submit">Salvar Meta</button>
 
             </form>
 
